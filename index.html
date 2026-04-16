@@ -17,27 +17,29 @@ body {
   height: 100vh;
 }
 
-/* MAIN CONTAINER */
+/* 🔥 SQUARE CONTAINER */
 .clock-container {
   background-color: #EDE9B7;
-  width: 100%;
-  max-width: 240px; /* perfectly fits mobile */
-  border-radius: 16px;
+  width: 240px;
+  height: 240px; /* makes it square */
+  border-radius: 18px;
   padding: 10px;
   box-shadow: 6px 6px #b65a2a;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-/* TIMER DISPLAY */
+/* TIMER */
 #time-left {
-  font-size: 32px;
+  font-size: 28px;
   text-align: center;
-  background-color: #8FA9A6;
-  padding: 10px;
+  background-color: #F8C8DC; /* baby pink */
+  padding: 8px;
   border-radius: 14px;
-  margin-bottom: 8px;
 }
 
-/* LABEL + BUTTONS ROW */
+/* LABEL + CONTROLS */
 #display-controls {
   display: flex;
   justify-content: space-between;
@@ -45,9 +47,9 @@ body {
 }
 
 #timer-label {
-  font-size: 13px;
-  background-color: #8FA9A6;
-  padding: 5px 8px;
+  font-size: 12px;
+  background-color: #F8C8DC;
+  padding: 4px 8px;
   border-radius: 8px;
 }
 
@@ -60,16 +62,15 @@ body {
 button {
   background-color: #E8AFAF;
   border: none;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   box-shadow: 2px 2px #b56b6b;
   font-size: 12px;
 }
 
-/* LENGTH BOXES */
+/* 🔥 HORIZONTAL BOXES */
 .length-container {
-  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   gap: 6px;
@@ -80,20 +81,19 @@ button {
   width: 48%;
   text-align: center;
   border: 1.5px solid #E8AFAF;
-  padding: 6px;
+  padding: 5px;
   border-radius: 10px;
 }
 
 .timer-length {
-  font-size: 18px;
-  margin: 4px 0;
+  font-size: 16px;
+  margin: 3px 0;
 }
 
-/* BUTTON ROW */
 .inc-dec-btn-container {
   display: flex;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
 }
 </style>
 </head>
@@ -198,7 +198,7 @@ class App extends React.Component {
         <div className="length-container">
 
           <div className="break-container">
-            <div>Break Length</div>
+            <div>Break</div>
             <div className="timer-length">{this.state.breakLen}</div>
             <div className="inc-dec-btn-container">
               <button onClick={()=>this.changeBreak(1)}>↑</button>
@@ -207,7 +207,7 @@ class App extends React.Component {
           </div>
 
           <div className="session-container">
-            <div>Session Length</div>
+            <div>Session</div>
             <div className="timer-length">{this.state.sessionLen}</div>
             <div className="inc-dec-btn-container">
               <button onClick={()=>this.changeSession(1)}>↑</button>
