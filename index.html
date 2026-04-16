@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css'>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@600&display=swap" rel="stylesheet">
+
+<style>
+body {
+  font-family: 'Roboto Mono', monospace;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* BUTTONS */
+button {
+  background-color: rgb(234,178,156);
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  box-shadow: 2px 2px rgb(194, 91, 44);
+  cursor: pointer;
+}
+
+/* MAIN CONTAINER */
+.clock-container {
+  background-color: rgb(240, 240, 190);
+  width: 100%;
+  max-width: 260px;
+  border-radius: 15px;
+  padding: 12px;
+  box-shadow: 5px 5px sienna;
+}
+
+/* TIME DISPLAY */
+#time-left {
+  font-size: 36px;
+  text-align: center;
+  background-color: rgb(150,180,175);
+  padding: 10px;
+  border-radius: 12px;
+}
+
+#timer-label {
+  font-size: 16px;
+  text-align: center;
+  padding: 5px;
+  background-color: rgb(150,180,175);
+  border-radius: 8px;
+  margin-top: 5px;
+}
+
+/* CONTROLS */
+#display-controls {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#timer-ssr {
+  display: flex;
+  gap: 8px;
+}
+
+/* LENGTH CONTROLS */
+.length-container {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.break-container, 
+.session-container {
+  text-align: center;
+  border: 2px solid rgb(234,178,156);
+  padding: 8px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.timer-length {
+  font-size: 1.2em;
+}
+
+.inc-dec-btn-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="root"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/react@17/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@17/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel">
+
+const SESSION = "Session";
+const BREAK = "Break";
+
+class App extends React.Component {
+  state = {
+    breakLen: 5,
+    sessionLen: 25,
+    timeLeft: 1500,
+    timerType: SESSION,
+    isRunning: false,
+    interval: null
+  };
+
+  formatTime = () => {
+    let m = Math.floor(this.state.timeLeft / 60);
+    let s = this.state.timeLeft % 60;
+    return (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+  };
+
+  startStop = () => {
+    if (!this.state.isRunning) {
+      let interval = setInterval(() => {
+        this.setState(prev => {
+          if (prev.timeLeft === 0) {
+            let newType = prev.timerType === SESSION ? BREAK : SESSION;
+            return {
+              timerType: newType,
+              timeLeft: newType === SESSION ? prev.sessionLen*60 : prev.breakLen*60
+            };
+          }
+          return { timeLeft: prev.timeLeft - 1 };
+        });
+      },1000);
+
+      this.setState({ isRunning: true, interval });
+    } else {
+      clearInterval(this.state.interval);
+      this.setState({ isRunning: false });
+    }
+  };
+
+  reset = () => {
+    clearInterval(this.state.interval);
+    this.setState({
+      breakLen: 5,
+      sessionLen: 25,
+      timeLeft: 1500,
+      timerType: SESSION,
+      isRunning: false
+    });
+  };
+
+  changeBreak = (val) => {
+    if (!this.state.isRunning) {
+      this.setState(prev => ({
+        breakLen: Math.min(60, Math.max(1, prev.breakLen + val))
+      }));
+    }
+  };
+
+  changeSession = (val) => {
+    if (!this.state.isRunning) {
+      this.setState(prev => ({
+        sessionLen: Math.min(60, Math.max(1, prev.sessionLen + val)),
+        timeLeft: prev.timerType === SESSION ? (prev.sessionLen+val)*60 : prev.timeLeft
+      }));
+    }
+  };
+
+  render() {
+    return (
+      <div className="clock-container">
+
+        <div id="time-left">{this.formatTime()}</div>
+
+        <div id="display-controls">
+          <div id="timer-label">{this.state.timerType}</div>
+          <div id="timer-ssr">
+            <button onClick={this.startStop}>
+              <i className={this.state.isRunning ? "fa fa-pause" : "fa fa-play"}></i>
+            </button>
+            <button onClick={this.reset}>
+              <i className="fa fa-refresh"></i>
+            </button>
+          </div>
+        </div>
+
+        <div className="length-container">
+
+          <div className="break-container">
+            <div>Break</div>
+            <div className="timer-length">{this.state.breakLen}</div>
+            <div className="inc-dec-btn-container">
+              <button onClick={()=>this.changeBreak(1)}>+</button>
+              <button onClick={()=>this.changeBreak(-1)}>-</button>
+            </div>
+          </div>
+
+          <div className="session-container">
+            <div>Session</div>
+            <div className="timer-length">{this.state.sessionLen}</div>
+            <div className="inc-dec-btn-container">
+              <button onClick={()=>this.changeSession(1)}>+</button>
+              <button onClick={()=>this.changeSession(-1)}>-</button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById("root"));
+
+</script>
+
+</body>
+</html>
