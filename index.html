@@ -17,11 +17,10 @@ body {
   height: 100vh;
 }
 
-/* 🔥 SQUARE CONTAINER */
 .clock-container {
   background-color: #EDE9B7;
   width: 240px;
-  height: 240px; /* makes it square */
+  height: 260px;
   border-radius: 18px;
   padding: 10px;
   box-shadow: 6px 6px #b65a2a;
@@ -30,13 +29,40 @@ body {
   justify-content: space-between;
 }
 
-/* TIMER */
+/* 🔥 PROGRESS RING */
+.progress-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: auto;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring circle {
+  fill: none;
+  stroke-width: 8;
+}
+
+.bg {
+  stroke: #f3dcdc;
+}
+
+.progress {
+  stroke: #F8C8DC;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear;
+}
+
+/* TIME INSIDE CIRCLE */
 #time-left {
-  font-size: 28px;
-  text-align: center;
-  background-color: #F8C8DC; /* baby pink */
-  padding: 8px;
-  border-radius: 14px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 22px;
 }
 
 /* LABEL + CONTROLS */
@@ -58,7 +84,6 @@ body {
   gap: 6px;
 }
 
-/* BUTTONS */
 button {
   background-color: #E8AFAF;
   border: none;
@@ -66,10 +91,9 @@ button {
   height: 26px;
   border-radius: 50%;
   box-shadow: 2px 2px #b56b6b;
-  font-size: 12px;
 }
 
-/* 🔥 HORIZONTAL BOXES */
+/* LENGTH BOXES */
 .length-container {
   display: flex;
   justify-content: space-between;
@@ -87,7 +111,6 @@ button {
 
 .timer-length {
   font-size: 16px;
-  margin: 3px 0;
 }
 
 .inc-dec-btn-container {
@@ -110,6 +133,8 @@ button {
 
 const SESSION = "Session";
 const BREAK = "Break";
+const RADIUS = 50;
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 class App extends React.Component {
   state = {
@@ -118,7 +143,8 @@ class App extends React.Component {
     timeLeft: 1500,
     timerType: SESSION,
     isRunning: false,
-    interval: null
+    interval: null,
+    totalTime: 1500
   };
 
   formatTime = () => {
@@ -127,15 +153,22 @@ class App extends React.Component {
     return (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
   };
 
+  getProgress = () => {
+    const progress = this.state.timeLeft / this.state.totalTime;
+    return CIRCUMFERENCE * (1 - progress);
+  };
+
   startStop = () => {
     if (!this.state.isRunning) {
       let interval = setInterval(() => {
         this.setState(prev => {
           if (prev.timeLeft === 0) {
             let newType = prev.timerType === SESSION ? BREAK : SESSION;
+            let newTime = newType === SESSION ? prev.sessionLen*60 : prev.breakLen*60;
             return {
               timerType: newType,
-              timeLeft: newType === SESSION ? prev.sessionLen*60 : prev.breakLen*60
+              timeLeft: newTime,
+              totalTime: newTime
             };
           }
           return { timeLeft: prev.timeLeft - 1 };
@@ -155,6 +188,7 @@ class App extends React.Component {
       breakLen: 5,
       sessionLen: 25,
       timeLeft: 1500,
+      totalTime: 1500,
       timerType: SESSION,
       isRunning: false
     });
@@ -170,10 +204,14 @@ class App extends React.Component {
 
   changeSession = (val) => {
     if (!this.state.isRunning) {
-      this.setState(prev => ({
-        sessionLen: Math.min(60, Math.max(1, prev.sessionLen + val)),
-        timeLeft: prev.timerType === SESSION ? (prev.sessionLen+val)*60 : prev.timeLeft
-      }));
+      this.setState(prev => {
+        let newLen = Math.min(60, Math.max(1, prev.sessionLen + val));
+        return {
+          sessionLen: newLen,
+          timeLeft: prev.timerType === SESSION ? newLen*60 : prev.timeLeft,
+          totalTime: newLen*60
+        };
+      });
     }
   };
 
@@ -181,7 +219,20 @@ class App extends React.Component {
     return (
       <div className="clock-container">
 
-        <div id="time-left">{this.formatTime()}</div>
+        <div className="progress-wrapper">
+          <svg className="progress-ring" width="120" height="120">
+            <circle className="bg" r={RADIUS} cx="60" cy="60" />
+            <circle
+              className="progress"
+              r={RADIUS}
+              cx="60"
+              cy="60"
+              strokeDasharray={CIRCUMFERENCE}
+              strokeDashoffset={this.getProgress()}
+            />
+          </svg>
+          <div id="time-left">{this.formatTime()}</div>
+        </div>
 
         <div id="display-controls">
           <div id="timer-label">{this.state.timerType}</div>
@@ -196,7 +247,6 @@ class App extends React.Component {
         </div>
 
         <div className="length-container">
-
           <div className="break-container">
             <div>Break</div>
             <div className="timer-length">{this.state.breakLen}</div>
@@ -214,7 +264,6 @@ class App extends React.Component {
               <button onClick={()=>this.changeSession(-1)}>↓</button>
             </div>
           </div>
-
         </div>
 
       </div>
