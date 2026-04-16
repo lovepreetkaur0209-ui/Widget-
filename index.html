@@ -17,48 +17,38 @@ body {
   height: 100vh;
 }
 
-/* BUTTONS */
-button {
-  background-color: rgb(234,178,156);
-  border: none;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  box-shadow: 2px 2px rgb(194, 91, 44);
-  cursor: pointer;
-}
-
 /* MAIN CONTAINER */
 .clock-container {
-  background-color: rgb(240, 240, 190);
+  background-color: #FADADD; /* pastel pink */
   width: 100%;
-  max-width: 260px;
-  border-radius: 15px;
-  padding: 12px;
-  box-shadow: 5px 5px sienna;
+  max-width: 220px; /* smaller */
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 3px 3px #c48a8a;
 }
 
 /* TIME DISPLAY */
 #time-left {
-  font-size: 36px;
+  font-size: 28px;
   text-align: center;
-  background-color: rgb(150,180,175);
-  padding: 10px;
-  border-radius: 12px;
+  background-color: #A7C7E7; /* baby blue */
+  padding: 8px;
+  border-radius: 10px;
 }
 
+/* LABEL */
 #timer-label {
-  font-size: 16px;
+  font-size: 14px;
   text-align: center;
-  padding: 5px;
-  background-color: rgb(150,180,175);
-  border-radius: 8px;
+  padding: 4px;
+  background-color: #A7C7E7;
+  border-radius: 6px;
   margin-top: 5px;
 }
 
 /* CONTROLS */
 #display-controls {
-  margin-top: 8px;
+  margin-top: 6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -66,35 +56,46 @@ button {
 
 #timer-ssr {
   display: flex;
-  gap: 8px;
+  gap: 6px;
+}
+
+/* BUTTONS */
+button {
+  background-color: #E8AFAF;
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  box-shadow: 1px 1px #b56b6b;
+  font-size: 12px;
 }
 
 /* LENGTH CONTROLS */
 .length-container {
-  margin-top: 10px;
+  margin-top: 8px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .break-container, 
 .session-container {
   text-align: center;
-  border: 2px solid rgb(234,178,156);
-  padding: 8px;
-  border-radius: 10px;
+  border: 1.5px solid #E8AFAF; /* softer border */
+  padding: 6px;
+  border-radius: 8px;
   width: 100%;
 }
 
 .timer-length {
-  font-size: 1.2em;
+  font-size: 1em;
 }
 
 .inc-dec-btn-container {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-top: 5px;
+  gap: 6px;
+  margin-top: 4px;
 }
 </style>
 </head>
