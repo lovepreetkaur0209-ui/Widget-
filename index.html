@@ -19,39 +19,36 @@ body {
 
 /* MAIN CONTAINER */
 .clock-container {
-  background-color: #FADADD; /* pastel pink */
+  background-color: #EDE9B7;
   width: 100%;
-  max-width: 220px; /* smaller */
-  border-radius: 12px;
+  max-width: 240px; /* perfectly fits mobile */
+  border-radius: 16px;
   padding: 10px;
-  box-shadow: 3px 3px #c48a8a;
+  box-shadow: 6px 6px #b65a2a;
 }
 
-/* TIME DISPLAY */
+/* TIMER DISPLAY */
 #time-left {
-  font-size: 28px;
+  font-size: 32px;
   text-align: center;
-  background-color: #A7C7E7; /* baby blue */
-  padding: 8px;
-  border-radius: 10px;
+  background-color: #8FA9A6;
+  padding: 10px;
+  border-radius: 14px;
+  margin-bottom: 8px;
 }
 
-/* LABEL */
-#timer-label {
-  font-size: 14px;
-  text-align: center;
-  padding: 4px;
-  background-color: #A7C7E7;
-  border-radius: 6px;
-  margin-top: 5px;
-}
-
-/* CONTROLS */
+/* LABEL + BUTTONS ROW */
 #display-controls {
-  margin-top: 6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+#timer-label {
+  font-size: 13px;
+  background-color: #8FA9A6;
+  padding: 5px 8px;
+  border-radius: 8px;
 }
 
 #timer-ssr {
@@ -63,39 +60,40 @@ body {
 button {
   background-color: #E8AFAF;
   border: none;
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  box-shadow: 1px 1px #b56b6b;
+  box-shadow: 2px 2px #b56b6b;
   font-size: 12px;
 }
 
-/* LENGTH CONTROLS */
+/* LENGTH BOXES */
 .length-container {
-  margin-top: 8px;
+  margin-top: 10px;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  justify-content: space-between;
+  gap: 6px;
 }
 
 .break-container, 
 .session-container {
+  width: 48%;
   text-align: center;
-  border: 1.5px solid #E8AFAF; /* softer border */
+  border: 1.5px solid #E8AFAF;
   padding: 6px;
-  border-radius: 8px;
-  width: 100%;
+  border-radius: 10px;
 }
 
 .timer-length {
-  font-size: 1em;
+  font-size: 18px;
+  margin: 4px 0;
 }
 
+/* BUTTON ROW */
 .inc-dec-btn-container {
   display: flex;
   justify-content: center;
   gap: 6px;
-  margin-top: 4px;
 }
 </style>
 </head>
@@ -200,20 +198,20 @@ class App extends React.Component {
         <div className="length-container">
 
           <div className="break-container">
-            <div>Break</div>
+            <div>Break Length</div>
             <div className="timer-length">{this.state.breakLen}</div>
             <div className="inc-dec-btn-container">
-              <button onClick={()=>this.changeBreak(1)}>+</button>
-              <button onClick={()=>this.changeBreak(-1)}>-</button>
+              <button onClick={()=>this.changeBreak(1)}>↑</button>
+              <button onClick={()=>this.changeBreak(-1)}>↓</button>
             </div>
           </div>
 
           <div className="session-container">
-            <div>Session</div>
+            <div>Session Length</div>
             <div className="timer-length">{this.state.sessionLen}</div>
             <div className="inc-dec-btn-container">
-              <button onClick={()=>this.changeSession(1)}>+</button>
-              <button onClick={()=>this.changeSession(-1)}>-</button>
+              <button onClick={()=>this.changeSession(1)}>↑</button>
+              <button onClick={()=>this.changeSession(-1)}>↓</button>
             </div>
           </div>
 
